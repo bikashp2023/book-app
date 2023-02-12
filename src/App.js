@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState } from "react";
+import BookCreate from "./component/BookCreate";
+import uuid from "uuid-random";
+import BookList from "./component/BookList";
 
 function App() {
+  const [books, setBooks] = useState([]);
+
+  const addBook = (title) => {
+    setBooks([...books, { id: uuid(), title }]);
+  };
+
+  const removeBook = (id) => {
+    const newBooks = books.filter((book) => book.id !== id);
+    setBooks(newBooks);
+  }
+
+  const updateBook = (id, title) => {
+    const newBooks = [...books];
+    newBooks.forEach((item) => { if (item.id === id) {
+      item.title = title;
+    } });
+    setBooks(newBooks);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container is-fluid">
+      <div className="notification">
+        <BookCreate addBook={addBook} />
+        No of books {books.length}
+        <BookList list={books} removeBook={removeBook} updateBook={updateBook}/>
+      </div>
     </div>
   );
 }
